@@ -1,11 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import "./App.scss";
+import { useCallback, useRef, useState } from "react";
 import {
+  Box,
+  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   Slider,
+  Typography,
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -16,7 +18,7 @@ const SourceVideo = (props) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currVideoDuration, setCurrVideoDuration] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
-  const [playbackRate, setPlayBackRate] = useState(1);
+  const [playbackRate, setPlayBackRate] = useState(null);
   const [aspectRatio, setAspectRatio] = useState("9 / 18");
 
   const videoRef = useRef();
@@ -59,7 +61,7 @@ const SourceVideo = (props) => {
   const playbackRateList = ["0.25", "0.5", "1", "1.5", "2"];
   return (
     <>
-      <div className="App">
+      <div className="content">
       <video
         ref={videoRef}
         autoPlay={false}
@@ -73,7 +75,7 @@ const SourceVideo = (props) => {
       <br />
       {
         <span style={{ margin: "50px" }} onClick={handleVideoPlay}>
-          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+          {isPlaying ? <PauseIcon sx={{color: "white"}}/> : <PlayArrowIcon sx={{color: "white"}}/>}
         </span>
       }
       <br />
@@ -91,11 +93,14 @@ const SourceVideo = (props) => {
         onChangeCommitted={() => setIsSeeking(false)}
       />
       <FormControl sx={{ width: "20%", margin: "50px" }}>
-        <InputLabel>Playback Rate</InputLabel>
         <Select
           value={playbackRate}
-          label="Playback Rate"
           onChange={(e) => handlePlaybackRate(e)}
+          renderValue={(value) => (
+              <Typography variant="body2">
+                Playback Speed <span>{value}x</span>
+              </Typography>
+          )}
         >
           {playbackRateList.map((val) => (
             <MenuItem value={Number(val)}>{val}</MenuItem>
@@ -103,11 +108,15 @@ const SourceVideo = (props) => {
         </Select>
       </FormControl>
       <FormControl sx={{ width: "20%", margin: "50px" }}>
-        <InputLabel>Aspect Ratio</InputLabel>
         <Select
           value={aspectRatio}
-          label="Aspect Ratio"
           onChange={(e) => handleAspectRatio(e)}
+          size="4"
+          renderValue={(value) => (
+              <Typography variant="body2">
+                Cropper aspect Ratio <span>{value}</span>
+              </Typography>
+          )}
         >
           {aspectRatioList.map((val) => (
             <MenuItem value={val}>{val}</MenuItem>

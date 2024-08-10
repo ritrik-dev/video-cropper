@@ -1,5 +1,5 @@
 import "./App.scss";
-import SourceVideo from "./SourceVideo";
+import SourceVideo from "./components/SourceVideo";
 
 const App = () => <SourceVideo />
 
