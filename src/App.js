@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import "./App.css";
+import "./App.scss";
 import { FormControl, InputLabel, MenuItem, Select, Slider } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -10,6 +10,7 @@ function App() {
   const [currVideoDuration, setCurrVideoDuration] = useState(0);
   const [isSeeking, setIsSeeking] = useState(false);
   const [playbackRate, setPlayBackRate] = useState(1);
+  const [aspectRatio, setAspectRatio] = useState("9 / 18");
 
   const videoRef = useRef();
   useEffect(() => {
@@ -43,52 +44,72 @@ function App() {
     videoRef.current.playbackRate = e.target.value;
     setPlayBackRate(e.target.value);
   }
+
+  const handleAspectRatio = (e) => {
+    setAspectRatio(e.target.value);
+  }
+
+  const aspectRatioList = [ "9 / 18", "9 / 16", "4 / 3", "3 / 4", "1 / 1", "4 / 5"]
+  const playbackRateList = [ "0.5", "1", "1.5", "2"]
   return (
+    <>
     <div className="App">
       <video
         ref={videoRef}
-        style={{ margin: "50px" }}
         autoPlay={false}
         onClick={handleVideoPlay}
       >
         <source src="/video/video-1.mp4" />
       </video>
-      <br />
-      {
-        <span style={{ margin: "50px" }} onClick={handleVideoPlay}>
-          {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
-        </span>
-      }
-      <br />
-
-      <Slider
-        sx={{ width: "20%", margin: "50px" }}
-        size="small"
-        value={currVideoDuration}
-        aria-label="Small"
-        min={0}
-        step={0.01}
-        max={totalVideoDuration}
-        valueLabelDisplay="auto"
-        onChange={(_, value) => seekTo(value)}
-        onChangeCommitted={() => setIsSeeking(false)}
-      />
-      <FormControl  sx={{ width: "20%", margin: "50px" }}>
-        <InputLabel>Playback Rate</InputLabel>
-        <Select
-          value={playbackRate}
-          label="Playback Rate"
-          onChange={(e) => handlePlaybackRate(e)}
-        >
-          <MenuItem value={0.5}>0.5</MenuItem>
-          <MenuItem value={1}>1</MenuItem>
-          <MenuItem value={1.5}>1.5</MenuItem>
-          <MenuItem value={2}>2</MenuItem>
-        </Select>
-      </FormControl>
-      <p>currTime : {currVideoDuration.toFixed(2)}</p>
-      <p>totalTime : {totalVideoDuration.toFixed(2)}</p>
+      <div className="crop-overlay" style={{aspectRatio: aspectRatio}}></div>
     </div>
+    <br />
+    {
+      <span style={{ margin: "50px" }} onClick={handleVideoPlay}>
+        {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
+      </span>
+    }
+    <br />
+
+    <Slider
+      sx={{ width: "20%", margin: "50px" }}
+      size="small"
+      value={currVideoDuration}
+      aria-label="Small"
+      min={0}
+      step={0.01}
+      max={totalVideoDuration}
+      valueLabelDisplay="auto"
+      onChange={(_, value) => seekTo(value)}
+      onChangeCommitted={() => setIsSeeking(false)}
+    />
+    <FormControl  sx={{ width: "20%", margin: "50px" }}>
+      <InputLabel>Playback Rate</InputLabel>
+      <Select
+        value={playbackRate}
+        label="Playback Rate"
+        onChange={(e) => handlePlaybackRate(e)}
+      >
+        {
+          playbackRateList.map((val) => <MenuItem value={Number(val)}>{val}</MenuItem>)
+        }
+      </Select>
+    </FormControl>
+    <FormControl  sx={{ width: "20%", margin: "50px" }}>
+      <InputLabel>Aspect Ratio</InputLabel>
+      <Select
+        value={aspectRatio}
+        label="Aspect Ratio"
+        onChange={(e) => handleAspectRatio(e)}
+      >
+         {
+          aspectRatioList.map((val) => <MenuItem value={val}>{val}</MenuItem>)
+        }
+      </Select>
+    </FormControl>
+    <p>currTime : {currVideoDuration.toFixed(2)}</p>
+    <p>totalTime : {totalVideoDuration.toFixed(2)}</p>
+    </>
   );
 }
 
