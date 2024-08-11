@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Box,
   IconButton,
@@ -14,24 +14,59 @@ import VolumeDownOutlinedIcon from "@mui/icons-material/VolumeDownOutlined";
 import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
 import Cropper from "./Cropper";
 
+const aspectRatioList = [
+  "9 / 18",
+  "9 / 16",
+  "4 / 3",
+  "3 / 4",
+  "1 / 1",
+  "4 / 5",
+];
+const playbackRateList = ["0.25", "0.5", "1", "1.5", "2"];
+
 const SourceVideo = (props) => {
-  const { cropMode } = props;
+  const { cropMode, videoRef, previewCanvasRef } = props;
   const [totalVideoDuration, setTotalVideoDuration] = useState(null);
   const [playbackRate, setPlayBackRate] = useState(null);
   const [volume, setVolume] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currVideoDuration, setCurrVideoDuration] = useState(0);
-  const [aspectRatio, setAspectRatio] = useState("9 / 18");
+  const [aspectRatio, setAspectRatio] = useState(aspectRatioList[0]);
+  const [cropArea, setCropArea] = useState(null);
 
-  const videoRef = useRef();
   const handleLoadedMetadata = () => {
-    console.log("videoRef :", videoRef);
     setTotalVideoDuration(videoRef.current.duration);
     setPlayBackRate(videoRef.current.playbackRate);
     setVolume(videoRef.current.volume * 10);
   };
   const handleTimeUpdate = (e) => {
     setCurrVideoDuration(videoRef.current.currentTime);
+    drawPreview(cropArea);
+  };
+
+  const handleCropChange = (newCropArea) => {
+    setCropArea(newCropArea);
+    drawPreview(newCropArea);
+  };
+
+  const drawPreview = (currCropArea) => {
+    if (videoRef.current && previewCanvasRef.current && currCropArea) {
+      const ctx = previewCanvasRef.current.getContext("2d");
+      previewCanvasRef.current.width = currCropArea.width;
+      previewCanvasRef.current.height = currCropArea.height;
+
+      ctx.drawImage(
+        videoRef.current,
+        currCropArea.left,
+        currCropArea.top,
+        currCropArea.width,
+        currCropArea.height,
+        0,
+        0,
+        currCropArea.width,
+        currCropArea.height
+      );
+    }
   };
 
   const handleVideoPlay = () => {
@@ -76,15 +111,6 @@ const SourceVideo = (props) => {
     videoRef.current.volume = value / 10;
   };
 
-  const aspectRatioList = [
-    "9 / 18",
-    "9 / 16",
-    "4 / 3",
-    "3 / 4",
-    "1 / 1",
-    "4 / 5",
-  ];
-  const playbackRateList = ["0.25", "0.5", "1", "1.5", "2"];
   return (
     <>
       <Box className="source-video">
@@ -92,18 +118,18 @@ const SourceVideo = (props) => {
           <Box className="video">
             <video
               ref={videoRef}
-              autoPlay={false}
+              autoPlay={isPlaying}
               onLoadedMetadata={handleLoadedMetadata}
               onTimeUpdate={handleTimeUpdate}
-              onPlaying={(e) => {
-                console.log("e >>", e);
-              }}
-              onTim
             >
               <source src="/video/video-1.mp4" />
             </video>
             {cropMode ? (
-              <Cropper aspectRatio={aspectRatio} cropMode={cropMode} />
+              <Cropper
+                aspectRatio={aspectRatio}
+                cropMode={cropMode}
+                handleCropChange={handleCropChange}
+              />
             ) : null}
           </Box>
         </Box>

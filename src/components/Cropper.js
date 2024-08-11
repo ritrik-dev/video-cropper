@@ -1,12 +1,17 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 const Cropper = (props) => {
-  const { aspectRatio } = props;
+  const { aspectRatio, handleCropChange } = props;
+
   let isDragging = false;
   let startX;
   let startLeft;
 
   const cropperRef = useRef();
+
+  useEffect(() => {
+    createCropObj();
+  }, [aspectRatio]);
 
   const handleMouseDown = (e) => {
     isDragging = true;
@@ -19,6 +24,7 @@ const Cropper = (props) => {
     if (isDragging) {
       isDragging = false;
       cropperRef.current.style.cursor = "grab";
+      createCropObj();
     }
   };
 
@@ -31,15 +37,26 @@ const Cropper = (props) => {
       cropperRef.current.offsetWidth;
     if (newLeft < 0) newLeft = 0;
     if (newLeft > maxLeft) newLeft = maxLeft;
-
     cropperRef.current.style.left = `${newLeft}px`;
+    // createCropObj();
   };
 
   const handleMouseLeave = () => {
     if (isDragging) {
       isDragging = false;
       cropperRef.current.style.cursor = "grab";
+      createCropObj();
     }
+  };
+
+  const createCropObj = () => {
+    const cropArea = {
+      width: cropperRef.current.offsetWidth,
+      height: cropperRef.current.offsetHeight,
+      left: parseInt(cropperRef.current.style.left, 10) || 0,
+      top: parseInt(cropperRef.current.style.top, 10) || 0,
+    };
+    handleCropChange(cropArea);
   };
 
   return (
