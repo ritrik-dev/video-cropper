@@ -5,7 +5,7 @@ const Slider = (theme) => {
           root: {
             padding: 0,
             "& .MuiSlider-rail": {
-                backgroundColor: "grey",
+                backgroundColor: "#9BA6AB",
                 height: 3
             },
             "& .MuiSlider-thumb": {

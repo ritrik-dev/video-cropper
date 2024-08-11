@@ -1,5 +1,6 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import React from "react";
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 
 const PreviewVideo = (props) => {
   const { previewCanvasRef, cropMode } = props;
@@ -11,7 +12,9 @@ const PreviewVideo = (props) => {
         </Box>
       ) : (
         <Box className="no-preview-container">
-          <h1>NO PREVIEW AVAILABLE</h1>
+          <OndemandVideoIcon sx={{color: "white"}}/>
+          <Typography variant="body1" sx={{color: "white"}}>Preview not available</Typography>
+          <Typography variant="body1" sx={{color: "#9BA6AB"}}>Please click on “Start Cropper”<br />and then play video</Typography>
         </Box>
       )}
     </Box>

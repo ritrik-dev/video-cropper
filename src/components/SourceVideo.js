@@ -25,7 +25,7 @@ const aspectRatioList = [
 const playbackRateList = ["0.25", "0.5", "1", "1.5", "2"];
 
 const SourceVideo = (props) => {
-  const { cropMode, videoRef, previewCanvasRef } = props;
+  const { cropMode, videoRef, previewCanvasRef, setRecordedData } = props;
   const [totalVideoDuration, setTotalVideoDuration] = useState(null);
   const [playbackRate, setPlayBackRate] = useState(null);
   const [volume, setVolume] = useState(null);
@@ -49,6 +49,21 @@ const SourceVideo = (props) => {
     drawPreview(newCropArea);
   };
 
+  const recordData = () => {
+    const currTime = videoRef.current.currentTime;
+    const currCoordinates = previewCanvasRef.current.getBoundingClientRect();
+    const cropperDimensions = [currCoordinates.left, currCoordinates.top, currCoordinates.width, currCoordinates.height];
+
+    const newRecord = {
+      timeStamp: currTime,
+      coordinates: cropperDimensions,
+      volume: videoRef.current.volume,
+      playbackRate: videoRef.current.playbackRate,
+    };
+
+    setRecordedData((prevData) => [...prevData, newRecord]);
+  };
+
   const drawPreview = (currCropArea) => {
     if (videoRef.current && previewCanvasRef.current && currCropArea) {
       const ctx = previewCanvasRef.current.getContext("2d");
@@ -66,6 +81,8 @@ const SourceVideo = (props) => {
         currCropArea.width,
         currCropArea.height
       );
+
+      recordData();
     }
   };
 
@@ -151,38 +168,6 @@ const SourceVideo = (props) => {
             onChange={handleSeek}
           />
         </Box>
-        <Box className="dropdown-container container">
-          <Select
-            className="playback"
-            value={playbackRate}
-            onChange={(e) => handlePlaybackRate(e)}
-            renderValue={(value) => (
-              <Typography variant="body2">
-                Playback Speed <span>{value}x</span>
-              </Typography>
-            )}
-          >
-            {playbackRateList.map((val) => (
-              <MenuItem value={Number(val)}>{val}</MenuItem>
-            ))}
-          </Select>
-          <Select
-            className="aspectRatio"
-            value={aspectRatio}
-            onChange={(e) => handleAspectRatio(e)}
-            size="4"
-            renderValue={(value) => (
-              <Typography variant="body2">
-                Cropper aspect Ratio <span>{value}</span>
-              </Typography>
-            )}
-            disabled={!cropMode}
-          >
-            {aspectRatioList.map((val) => (
-              <MenuItem value={val}>{val}</MenuItem>
-            ))}
-          </Select>
-        </Box>
         <Box className="volume-container container">
           <Typography variant="body2" className="time-stamp">
             {useMemo(
@@ -222,6 +207,37 @@ const SourceVideo = (props) => {
               onChange={handleVolumeChange}
             />
           </Box>
+        </Box>
+        <Box className="dropdown-container container">
+          <Select
+            className="playback"
+            value={playbackRate}
+            onChange={(e) => handlePlaybackRate(e)}
+            renderValue={(value) => (
+              <Typography variant="body2">
+                Playback Speed <span>{value}x</span>
+              </Typography>
+            )}
+          >
+            {playbackRateList.map((val) => (
+              <MenuItem value={Number(val)}>{val}</MenuItem>
+            ))}
+          </Select>
+          <Select
+            className="aspectRatio"
+            value={aspectRatio}
+            onChange={(e) => handleAspectRatio(e)}
+            size="4"
+            renderValue={(value) => (
+              <Typography variant="body2">
+                Cropper aspect Ratio <span>{value}</span>
+              </Typography>
+            )}
+          >
+            {aspectRatioList.map((val) => (
+              <MenuItem value={val}>{val}</MenuItem>
+            ))}
+          </Select>
         </Box>
       </Box>
     </>

@@ -7,7 +7,7 @@
   & .left-container {
     & .source-video {
       & .container {
-        padding: 10px;
+        padding: 2px;
       }
       & .video-container{
         & .video {
@@ -23,7 +23,7 @@
           & .crop-overlay {
             position: absolute;
             width: auto;
-            // aspect-ratio: 9 / 18;
+            cursor: grab;
             top: 0;
             background-color: transparent;
             border: 1px dashed red;
@@ -39,7 +39,7 @@
         align-items: center;
         justify-content: center;
         & .play-pause-btn {
-          margin-right: 25px;
+          margin-right: 10px;
         }
       }
       & .volume-container {
@@ -49,7 +49,7 @@
         & .time-stamp {
           color: white;
           & span {
-            color: grey;
+            color: #9BA6AB;
           }
         }
         & .volume-sub-container {
@@ -58,13 +58,13 @@
         align-items: center;
         justify-content: center;
           & .mute-unmute-btn {
-            margin-right: 25px;
+            margin-right: 10px;
           }
         }
       }
       & .dropdown-container {
         & .playback {
-          margin-right: 25px;
+          margin-right: 10px;
         }
       }
     }
@@ -76,9 +76,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      & .canvas-container {
-
-      }
+      text-align: center;
     }
   }
 }
@@ -98,5 +96,10 @@
   & .right-container {
     display: flex;
     justify-content: flex-end;
+  }
+  & .view-state {
+    padding: 2px;
+    border-radius: 10px;
+    background-color: #45474E;
   }
 }

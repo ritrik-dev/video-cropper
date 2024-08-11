@@ -1,11 +1,11 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 
 const Cropper = (props) => {
   const { aspectRatio, handleCropChange } = props;
 
-  let isDragging = false;
-  let startX;
-  let startLeft;
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(null);
+  const [startLeft, setStartLeft] = useState(null);
 
   const cropperRef = useRef();
 
@@ -14,19 +14,15 @@ const Cropper = (props) => {
   }, [aspectRatio]);
 
   const handleMouseDown = (e) => {
-    isDragging = true;
-    startX = e.clientX;
-    startLeft = parseInt(window.getComputedStyle(cropperRef.current).left, 10);
-    // startLeft = window.getComputedStyle(cropperRef.current).left
+    setIsDragging(true);
+    setStartX(e.clientX);
+    setStartLeft(parseInt(window.getComputedStyle(cropperRef.current).left, 10));
     cropperRef.current.style.cursor = "grabbing";
   };
 
   const handleMouseUp = () => {
-    if (isDragging) {
-      isDragging = false;
+      setIsDragging(false);
       cropperRef.current.style.cursor = "grab";
-      createCropObj();
-    }
   };
 
   const handleMouseMove = (e) => {
@@ -39,15 +35,12 @@ const Cropper = (props) => {
     if (newLeft < 0) newLeft = 0;
     if (newLeft > maxLeft) newLeft = maxLeft;
     cropperRef.current.style.left = `${newLeft}px`;
-    // createCropObj();
+    createCropObj();
   };
 
   const handleMouseLeave = () => {
-    if (isDragging) {
-      isDragging = false;
+      setIsDragging(false);
       cropperRef.current.style.cursor = "grab";
-      createCropObj();
-    }
   };
 
   const createCropObj = () => {
@@ -56,8 +49,6 @@ const Cropper = (props) => {
       height: cropperRef.current.offsetHeight,
       left: parseInt(cropperRef.current.style.left, 10) || 0,
       top: parseInt(cropperRef.current.style.top, 10) || 0,
-      // left: cropperRef.current.style.left || 0,
-      // top: cropperRef.current.style.top || 0,
     };
     handleCropChange(cropArea);
   };

@@ -12,13 +12,13 @@ const Select = (theme) => {
                     color: "white",
                     "& span": {
                         marginLeft: 10,
-                        color: "grey",
+                        color: "#9BA6AB",
                     }
                 }
             },
             "& fieldset": {
                 padding: 0,
-                borderColor: "white",
+                borderColor: "white !important",
                 borderRadius: 10
             },
             "& svg": {
