@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 
 const Cropper = (props) => {
   const { aspectRatio } = props;
@@ -8,42 +8,49 @@ const Cropper = (props) => {
 
   const cropperRef = useRef();
 
-  useEffect(() => {
-    const cropperRefCurrent = cropperRef.current;
+  const handleMouseDown = (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startLeft = parseInt(window.getComputedStyle(cropperRef.current).left, 10);
+    cropperRef.current.style.cursor = "grabbing";
+  };
 
-    cropperRefCurrent.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      startX = e.clientX;
-      startLeft = parseInt(window.getComputedStyle(cropperRefCurrent).left, 10);
-      cropperRefCurrent.style.cursor = "grabbing";
-    });
+  const handleMouseUp = () => {
+    if (isDragging) {
+      isDragging = false;
+      cropperRef.current.style.cursor = "grab";
+    }
+  };
 
-    cropperRefCurrent.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-      const dx = e.clientX - startX;
-      let newLeft = startLeft + dx;
-      const maxLeft =
-        cropperRefCurrent.parentElement.offsetWidth -
-        cropperRefCurrent.offsetWidth;
-      if (newLeft < 0) newLeft = 0;
-      if (newLeft > maxLeft) newLeft = maxLeft;
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    let newLeft = startLeft + dx;
+    const maxLeft =
+      cropperRef.current.parentElement.offsetWidth -
+      cropperRef.current.offsetWidth;
+    if (newLeft < 0) newLeft = 0;
+    if (newLeft > maxLeft) newLeft = maxLeft;
 
-      cropperRefCurrent.style.left = `${newLeft}px`;
-    });
+    cropperRef.current.style.left = `${newLeft}px`;
+  };
 
-    cropperRefCurrent.addEventListener("mouseup", () => {
-      if (isDragging) {
-        isDragging = false;
-        cropperRefCurrent.style.cursor = "grab";
-      }
-    });
-  }, []);
+  const handleMouseLeave = () => {
+    if (isDragging) {
+      isDragging = false;
+      cropperRef.current.style.cursor = "grab";
+    }
+  };
 
   return (
     <div
       className="crop-overlay"
       ref={cropperRef}
       style={{ aspectRatio: aspectRatio }}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     />
   );
 };
