@@ -184,16 +184,18 @@ const SourceVideo = (props) => {
           </Select>
         </Box>
         <Box className="volume-container container">
-          <Typography variant="body2">
+          <Typography variant="body2" className="time-stamp">
             {useMemo(
               () => formatDuration(currVideoDuration),
               [currVideoDuration]
             )}{" "}
             |{" "}
-            {useMemo(
-              () => formatDuration(totalVideoDuration),
-              [totalVideoDuration]
-            )}
+            <span>
+              {useMemo(
+                () => formatDuration(totalVideoDuration),
+                [totalVideoDuration]
+              )}
+            </span>
           </Typography>
           <Box className="volume-sub-container">
             <IconButton

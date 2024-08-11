@@ -17,6 +17,7 @@ const Cropper = (props) => {
     isDragging = true;
     startX = e.clientX;
     startLeft = parseInt(window.getComputedStyle(cropperRef.current).left, 10);
+    // startLeft = window.getComputedStyle(cropperRef.current).left
     cropperRef.current.style.cursor = "grabbing";
   };
 
@@ -55,6 +56,8 @@ const Cropper = (props) => {
       height: cropperRef.current.offsetHeight,
       left: parseInt(cropperRef.current.style.left, 10) || 0,
       top: parseInt(cropperRef.current.style.top, 10) || 0,
+      // left: cropperRef.current.style.left || 0,
+      // top: cropperRef.current.style.top || 0,
     };
     handleCropChange(cropArea);
   };
