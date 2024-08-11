@@ -1,4 +1,5 @@
 import Button from './Button'
+import IconButton from './IconButton'
 import Select from './Select'
 import Slider from './Slider'
 
@@ -7,6 +8,7 @@ const index = (theme) => {
     Button(theme),
     Select(theme),
     Slider(theme),
+    IconButton(theme)
   )
 }
 

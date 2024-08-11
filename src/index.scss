@@ -3,8 +3,14 @@
   padding: 0;
   box-sizing: border-box !important;
 }
+body {
+  background-color: #404040;
+}
 #root {
 height: 100vh;
 width: 100vw;
 background-color: #404040;
+display: flex;
+flex-direction: column;
+justify-content: space-between;
 }
