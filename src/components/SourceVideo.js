@@ -31,7 +31,7 @@ const SourceVideo = (props) => {
   const [volume, setVolume] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currVideoDuration, setCurrVideoDuration] = useState(0);
-  const [aspectRatio, setAspectRatio] = useState(aspectRatioList[0]);
+  const [aspectRatio, setAspectRatio] = useState("9 / 18");
   const [cropArea, setCropArea] = useState(null);
 
   const handleLoadedMetadata = () => {

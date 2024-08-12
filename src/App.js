@@ -1,8 +1,9 @@
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import "./App.scss";
 import PreviewVideo from "./components/PreviewVideo";
 import SourceVideo from "./components/SourceVideo";
 import { useRef, useState } from "react";
+import RecordedVideo from "./components/RecordedVideo";
 
 const App = (props) => {
   const [cropMode, setCropMode] = useState(false);
@@ -24,6 +25,19 @@ const App = (props) => {
     document.body.removeChild(link);
   };
 
+  const handleCancel = () => {
+    setCropMode(false);
+    setRecordedData([]);
+  };
+
+  const handleView = (value) => {
+    if (viewState === value) return;
+    setViewState(value);
+    if (value === "generate") {
+      handleCancel();
+    }
+  };
+
   return (
     <>
       <Box className="cta-container">
@@ -31,14 +45,14 @@ const App = (props) => {
           <Button
             color={viewState === "preview" ? "success" : "secondary"}
             variant="contained"
-            onClick={() => setViewState("preview")}
+            onClick={() => handleView("preview")}
           >
             Preview Session
           </Button>
           <Button
             color={viewState === "generate" ? "success" : "secondary"}
             variant="contained"
-            onClick={() => setViewState("generate")}
+            onClick={() => handleView("generate")}
           >
             Generate Session
           </Button>
@@ -62,7 +76,7 @@ const App = (props) => {
               />
             </Box>
           </Box>
-          <Box className="cta-container">
+          <Box className="cta-container bottom-container">
             <Box className="left-container divided-container">
               <Button
                 color="primary"
@@ -90,14 +104,20 @@ const App = (props) => {
               </Button>
             </Box>
             <Box className="right-container divided-container">
-              <Button color="secondary" variant="contained">
+              <Button
+                color="secondary"
+                variant="contained"
+                onClick={handleCancel}
+              >
                 Cancel
               </Button>
             </Box>
           </Box>
         </>
+      ) : recordedData.length ? (
+        <RecordedVideo recordedData={recordedData} />
       ) : (
-        <h1>preview</h1>
+        <h1>No Data Recorder</h1>
       )}
     </>
   );

@@ -21,8 +21,8 @@ const Cropper = (props) => {
   };
 
   const handleMouseUp = () => {
-      setIsDragging(false);
-      cropperRef.current.style.cursor = "grab";
+    setIsDragging(false);
+    cropperRef.current.style.cursor = "grab";
   };
 
   const handleMouseMove = (e) => {
@@ -39,8 +39,8 @@ const Cropper = (props) => {
   };
 
   const handleMouseLeave = () => {
-      setIsDragging(false);
-      cropperRef.current.style.cursor = "grab";
+    setIsDragging(false);
+    cropperRef.current.style.cursor = "grab";
   };
 
   const createCropObj = () => {
