@@ -66,25 +66,37 @@ const SourceVideo = (props) => {
 
   const drawPreview = (currCropArea) => {
     if (videoRef.current && previewCanvasRef.current && currCropArea) {
-      const ctx = previewCanvasRef.current.getContext("2d");
-      previewCanvasRef.current.width = currCropArea.width;
-      previewCanvasRef.current.height = currCropArea.height;
-
+      const video = videoRef.current;
+      const canvas = previewCanvasRef.current;
+      const ctx = canvas.getContext("2d");
+      const videoWidth = video.videoWidth;
+      const videoHeight = video.videoHeight;
+      const scaleX = videoWidth / video.clientWidth;
+      const scaleY = videoHeight / video.clientHeight;
+      const scaledCropArea = {
+        left: currCropArea.left * scaleX,
+        top: currCropArea.top * scaleY,
+        width: currCropArea.width * scaleX,
+        height: currCropArea.height * scaleY,
+      };
+      canvas.width = scaledCropArea.width;
+      canvas.height = scaledCropArea.height;
       ctx.drawImage(
-        videoRef.current,
-        currCropArea.left,
-        currCropArea.top,
-        currCropArea.width,
-        currCropArea.height,
+        video,
+        scaledCropArea.left,
+        scaledCropArea.top,
+        scaledCropArea.width,
+        scaledCropArea.height,
         0,
         0,
-        currCropArea.width,
-        currCropArea.height
+        scaledCropArea.width,
+        scaledCropArea.height
       );
 
       recordData();
     }
   };
+  
 
   const handleVideoPlay = () => {
     isPlaying ? videoRef.current.pause() : videoRef.current.play();
